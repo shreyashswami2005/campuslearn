@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}CampusLearn — Learn for college{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <h1>Courses built for college students</h1>
+    <p>Browse subjects, enroll in minutes, and read lessons at your pace — free for your campus community.</p>
+    <a class="btn-primary-site" href="{% url 'courses:list' %}">Browse courses</a>
+    {% if not user.is_authenticated %}
+      <a class="btn-ghost" href="{% url 'accounts:register' %}">Create free account</a>
+    {% endif %}
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <h2 class="section-title">Featured courses</h2>
+    {% if courses %}
+      <div class="course-grid">
+        {% for course in courses %}
+          <a class="course-item" href="{{ course.get_absolute_url }}">
+            {% if course.category %}<span class="badge-cat">{{ course.category }}</span>{% endif %}
+            <h3>{{ course.title }}</h3>
+            <p>{{ course.description }}</p>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="empty-state">No courses yet. Staff can add them in the admin panel.</p>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

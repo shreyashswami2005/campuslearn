@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}My attendance — CampusLearn{% endblock %}
+
+{% block content %}
+<div class="container section">
+  <div class="dash-header">
+    <div>
+      <p class="dash-eyebrow">Academics</p>
+      <h1>My attendance</h1>
+      <p class="text-muted mb-0">Class attendance records for your enrolled courses.</p>
+    </div>
+    <a class="btn-ghost" href="{% url 'accounts:dashboard' %}">Back to dashboard</a>
+  </div>
+
+  <div class="stat-cards">
+    <div class="stat-card">
+      <span class="stat-label">Overall</span>
+      <span class="stat-value">{% if attendance_percent is not None %}{{ attendance_percent }}%{% else %}—{% endif %}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Present</span>
+      <span class="stat-value">{{ counts.present|default:0 }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Absent</span>
+      <span class="stat-value">{{ counts.absent|default:0 }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Late</span>
+      <span class="stat-value">{{ counts.late|default:0 }}</span>
+    </div>
+  </div>
+
+  {% if by_course %}
+    <h2 class="section-title" style="font-size: 1.35rem;">By course</h2>
+    <div class="course-grid mb-4">
+      {% for row in by_course %}
+        <div class="course-item" style="cursor: default;">
+          <span class="badge-cat">{{ row.percent }}%</span>
+          <h3>{{ row.course.title }}</h3>
+          <p>{{ row.present }} present / late of {{ row.total }} classes</p>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <form method="get" class="filter-bar">
+    <select name="course" aria-label="Filter by course">
+      <option value="">All courses</option>
+      {% for course in courses %}
+        <option value="{{ course.slug }}" {% if selected_course == course.slug %}selected{% endif %}>{{ course.title }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn-primary-site">Filter</button>
+  </form>
+
+  {% if records %}
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Course</th>
+            <th>Status</th>
+            <th>Remarks</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in records %}
+            <tr>
+              <td>{{ record.date|date:"M j, Y" }}</td>
+              <td>{{ record.course.title }}</td>
+              <td><span class="status-pill status-{{ record.status }}">{{ record.get_status_display }}</span></td>
+              <td>{% if record.remarks %}{{ record.remarks }}{% else %}—{% endif %}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="empty-state">No attendance records yet. Teachers add them from the admin panel.</p>
+  {% endif %}
+</div>
+{% endblock %}

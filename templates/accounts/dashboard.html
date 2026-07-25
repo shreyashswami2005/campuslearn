@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — CampusLearn{% endblock %}
+
+{% block content %}
+<div class="container section">
+  <div class="dash-header">
+    <div>
+      <p class="dash-eyebrow">Student dashboard</p>
+      <h1>Welcome, {{ profile.display_name }}</h1>
+      <p class="text-muted mb-0">Profile, results, attendance, and enrolled courses.</p>
+    </div>
+    <a class="btn-primary-site" href="{% url 'accounts:edit_profile' %}">Edit profile</a>
+  </div>
+
+  <div class="stat-cards mb-4">
+    <a class="stat-card stat-card-link" href="{% url 'courses:my_courses' %}">
+      <span class="stat-label">Courses</span>
+      <span class="stat-value">{{ enrollment_count }}</span>
+    </a>
+    <a class="stat-card stat-card-link" href="{% url 'courses:my_results' %}">
+      <span class="stat-label">Results</span>
+      <span class="stat-value">{{ result_count }}</span>
+    </a>
+    <a class="stat-card stat-card-link" href="{% url 'courses:my_attendance' %}">
+      <span class="stat-label">Attendance</span>
+      <span class="stat-value">{% if attendance_percent is not None %}{{ attendance_percent }}%{% else %}—{% endif %}</span>
+    </a>
+  </div>
+
+  <div class="dash-grid">
+    <section class="dash-panel">
+      <h2>Profile information</h2>
+      <dl class="profile-dl">
+        <div>
+          <dt>Username</dt>
+          <dd>{{ user.username }}</dd>
+        </div>
+        <div>
+          <dt>Full name</dt>
+          <dd>{% if user.get_full_name %}{{ user.get_full_name }}{% else %}—{% endif %}</dd>
+        </div>
+        <div>
+          <dt>Email</dt>
+          <dd>{% if user.email %}{{ user.email }}{% else %}—{% endif %}</dd>
+        </div>
+        <div>
+          <dt>Phone</dt>
+          <dd>{% if profile.phone %}{{ profile.phone }}{% else %}—{% endif %}</dd>
+        </div>
+        <div>
+          <dt>College</dt>
+          <dd>{% if profile.college %}{{ profile.college }}{% else %}—{% endif %}</dd>
+        </div>
+        <div>
+          <dt>Department</dt>
+          <dd>{% if profile.department %}{{ profile.department }}{% else %}—{% endif %}</dd>
+        </div>
+        <div>
+          <dt>Year of study</dt>
+          <dd>{% if profile.year_of_study %}{{ profile.year_of_study }}{% else %}—{% endif %}</dd>
+        </div>
+        <div>
+          <dt>Student ID</dt>
+          <dd>{% if profile.student_id %}{{ profile.student_id }}{% else %}—{% endif %}</dd>
+        </div>
+      </dl>
+      {% if profile.bio %}
+        <h3 class="profile-bio-title">About</h3>
+        <p class="profile-bio">{{ profile.bio }}</p>
+      {% endif %}
+    </section>
+
+    <section class="dash-panel">
+      <h2>Recent results</h2>
+      {% if recent_results %}
+        <ul class="dash-course-list">
+          {% for result in recent_results %}
+            <li>
+              <a href="{% url 'courses:my_results' %}">{{ result.title }} — {{ result.marks_obtained }}/{{ result.max_marks }}</a>
+              <span>{% if result.grade %}{{ result.grade }}{% else %}{{ result.percentage }}%{% endif %}</span>
+            </li>
+          {% endfor %}
+        </ul>
+        <a class="btn-ghost ps-0" href="{% url 'courses:my_results' %}">View all results</a>
+      {% else %}
+        <p class="empty-state pt-2">No results yet.</p>
+      {% endif %}
+
+      <h2 class="mt-4">Recent attendance</h2>
+      {% if recent_attendance %}
+        <ul class="dash-course-list">
+          {% for record in recent_attendance %}
+            <li>
+              <span>{{ record.course.title }} — {{ record.date|date:"M j" }}</span>
+              <span class="status-pill status-{{ record.status }}">{{ record.get_status_display }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+        <a class="btn-ghost ps-0" href="{% url 'courses:my_attendance' %}">View all attendance</a>
+      {% else %}
+        <p class="empty-state pt-2">No attendance records yet.</p>
+      {% endif %}
+
+      <h3 class="mt-4 mb-3" style="font-size: 1.05rem;">Enrolled courses</h3>
+      {% if enrollments %}
+        <ul class="dash-course-list">
+          {% for enrollment in enrollments %}
+            <li>
+              <a href="{{ enrollment.course.get_absolute_url }}">{{ enrollment.course.title }}</a>
+              <span>{{ enrollment.enrolled_at|date:"M j, Y" }}</span>
+            </li>
+          {% endfor %}
+        </ul>
+        <a class="btn-ghost ps-0" href="{% url 'courses:my_courses' %}">View all my courses</a>
+      {% else %}
+        <p class="empty-state pt-2">No enrollments yet.</p>
+        <a class="btn-primary-site" href="{% url 'courses:list' %}">Browse courses</a>
+      {% endif %}
+    </section>
+  </div>
+</div>
+{% endblock %}

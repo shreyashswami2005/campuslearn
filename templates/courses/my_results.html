@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}My results — CampusLearn{% endblock %}
+
+{% block content %}
+<div class="container section">
+  <div class="dash-header">
+    <div>
+      <p class="dash-eyebrow">Academics</p>
+      <h1>My results</h1>
+      <p class="text-muted mb-0">Marks and grades published by your teachers.</p>
+    </div>
+    <a class="btn-ghost" href="{% url 'accounts:dashboard' %}">Back to dashboard</a>
+  </div>
+
+  <form method="get" class="filter-bar">
+    <select name="course" aria-label="Filter by course">
+      <option value="">All courses</option>
+      {% for course in courses %}
+        <option value="{{ course.slug }}" {% if selected_course == course.slug %}selected{% endif %}>{{ course.title }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn-primary-site">Filter</button>
+  </form>
+
+  {% if results %}
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Course</th>
+            <th>Type</th>
+            <th>Marks</th>
+            <th>%</th>
+            <th>Grade</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for result in results %}
+            <tr>
+              <td>
+                <strong>{{ result.title }}</strong>
+                {% if result.remarks %}<div class="text-muted small">{{ result.remarks }}</div>{% endif %}
+              </td>
+              <td>{{ result.course.title }}</td>
+              <td>{{ result.get_exam_type_display }}</td>
+              <td>{{ result.marks_obtained }} / {{ result.max_marks }}</td>
+              <td>{% if result.percentage is not None %}{{ result.percentage }}%{% else %}—{% endif %}</td>
+              <td>{% if result.grade %}<span class="grade-pill">{{ result.grade }}</span>{% else %}—{% endif %}</td>
+              <td>{% if result.exam_date %}{{ result.exam_date|date:"M j, Y" }}{% else %}—{% endif %}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="empty-state">No results published yet. Teachers add them from the admin panel.</p>
+  {% endif %}
+</div>
+{% endblock %}
