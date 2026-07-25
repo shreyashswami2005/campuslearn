@@ -1,3 +1,14 @@
+[project]
+name = "campuslearn"
+version = "1.0.0"
+description = "College learning platform for students and teachers"
+requires-python = ">=3.12"
+dependencies = [
+    "Django>=5.0,<6.0",
+    "psycopg[binary]>=3.1,<4",
+    "python-dotenv>=1.0,<2",
+]
+
 [tool.vercel]
 entrypoint = "config.wsgi:application"
 
