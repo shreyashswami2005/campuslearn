@@ -4,5 +4,8 @@
     "config/wsgi.py": {
       "maxDuration": 60
     }
+  },
+  "env": {
+    "DJANGO_SETTINGS_MODULE": "config.settings"
   }
 }
