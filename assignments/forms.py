@@ -1,5 +1,5 @@
 from django import forms
-from .models import Assignment
+from .models import Assignment, Submission
 
 class AssignmentForm(forms.ModelForm):
     class Meta:
@@ -14,3 +14,12 @@ class AssignmentForm(forms.ModelForm):
 
 class SubmissionForm(forms.Form):
     file = forms.FileField(label='Upload your submission', widget=forms.ClearableFileInput(attrs={'class': 'form-control'}))
+
+class SubmissionReviewForm(forms.ModelForm):
+    class Meta:
+        model = Submission
+        fields = ['grade', 'feedback']
+        widgets = {
+            'grade': forms.NumberInput(attrs={'class': 'form-control'}),
+            'feedback': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }

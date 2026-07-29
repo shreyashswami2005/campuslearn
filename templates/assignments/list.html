@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Assignments{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4">Assignments</h2>
+  <a href="{% url 'assignments:create' %}" class="btn btn-primary mb-3">Create Assignment</a>
+  <div class="row">
+    {% for assignment in assignments %}
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card h-100 shadow-sm glass">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ assignment.title }}</h5>
+          <p class="card-text text-truncate">{{ assignment.description|default:"No description" }}</p>
+          <p class="card-text"><small>Due: {{ assignment.due_date|date:"M d, Y" }}</small></p>
+          <a href="{% url 'assignments:detail' pk=assignment.pk %}" class="mt-auto btn btn-outline-primary">View</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p>No assignments yet.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

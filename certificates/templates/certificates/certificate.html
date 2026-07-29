@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Certificate{% endblock %}
+{% block content %}
+<div class="container py-5 glass text-center">
+  <h2 class="mb-4">Certificate of Completion</h2>
+  <p>This certifies that <strong>{{ certificate.student.get_full_name|default:certificate.student.username }}</strong></p>
+  <p>has successfully completed the course <strong>{{ certificate.course.title }}</strong>.</p>
+  <p>Issued on: {{ certificate.issued_at|date:"F j, Y" }}</p>
+  {% if certificate.qr_code %}
+    <img src="{{ certificate.qr_code.url }}" alt="QR Code" class="my-4" style="max-width:200px;"/>
+  {% endif %}
+  <a href="{% url 'certificates:download' certificate.pk %}" class="btn btn-success mt-3">Download PDF</a>
+</div>
+{% endblock %}

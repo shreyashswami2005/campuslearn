@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}My Marks{% endblock %}
+{% block content %}
+<div class="container py-5 glass">
+  <h2 class="mb-4">My Internal Marks</h2>
+  {% if marks %}
+    <table class="table table-hover table-dark">
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Component</th>
+          <th>Score</th>
+          <th>Max Score</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for mark in marks %}
+        <tr>
+          <td>{{ mark.course.title }}</td>
+          <td>{{ mark.component.name }}</td>
+          <td>{{ mark.score }}</td>
+          <td>{{ mark.max_score }}</td>
+          <td>{{ mark.date_recorded|date:"M d, Y" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No marks recorded yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

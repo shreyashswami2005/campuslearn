@@ -1,0 +1,77 @@
+/* 3D Dashboard Styles */
+/* Base container */
+.grid-3d {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    perspective: 1200px; /* 3D depth */
+}
+
+/* 3D Card */
+.card-3d {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    width: 300px;
+    transform-style: preserve-3d;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+.card-3d:hover {
+    transform: rotateX(10deg) rotateY(10deg);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+}
+.card-3d h4 {
+    color: #fff;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+/* Progress bar container */
+.progress-bar {
+    background: rgba(255,255,255,0.1);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    height: 1.2rem;
+    margin: 0.5rem 0;
+    position: relative;
+}
+
+/* 3D fill */
+.progress-fill {
+    background: linear-gradient(135deg, #ffdd57, #ff6f91);
+    height: 100%;
+    width: 0%;
+    transition: width 1.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+    transform: translateZ(10px);
+}
+
+/* Course name and percent */
+.progress-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    color: #e0e0e0;
+}
+.course-name {
+    font-weight: 500;
+    font-size: 0.95rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.percent {
+    align-self: flex-end;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #ffdd57;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-3d { width: 90%; }
+    .grid-3d { gap: 1rem; }
+}

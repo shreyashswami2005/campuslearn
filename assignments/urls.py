@@ -8,6 +8,6 @@ urlpatterns = [
     path('<int:pk>/', views.AssignmentDetailView.as_view(), name='detail'),
     path('create/', views.AssignmentCreateView.as_view(), name='create'),
     path('<int:pk>/edit/', views.AssignmentUpdateView.as_view(), name='edit'),
-    path('<int:pk>/delete/', views.AssignmentDeleteView.as_view(), name='delete'),
+    path('<int:pk>/review/', views.submission_review, name='review'),
     path('<int:pk>/submit/', views.submit_assignment, name='submit'),
 ]

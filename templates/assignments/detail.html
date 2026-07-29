@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Assignment Detail{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-3">{{ assignment.title }}</h2>
+  <p>{{ assignment.description|linebreaks }}</p>
+  <p><strong>Due:</strong> {{ assignment.due_date|date:"M d, Y" }}</p>
+  <p><strong>Max Score:</strong> {{ assignment.max_score }}</p>
+
+  {% if user.is_staff %}
+    <h4 class="mt-4">Submissions</h4>
+    <ul class="list-group">
+      {% for sub in assignment.submissions.all %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ sub.student.username }} – {{ sub.submitted_at|date:"M d, Y H:i" }}
+          {% if sub.grade %}
+            <span class="badge bg-success">Grade: {{ sub.grade }}</span>
+          {% else %}
+            <a href="{% url 'assignments:review' pk=sub.pk %}" class="btn btn-sm btn-outline-primary">Review</a>
+          {% endif %}
+        </li>
+      {% empty %}
+        <li class="list-group-item">No submissions yet.</li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <a href="{% url 'assignments:submit' pk=assignment.pk %}" class="btn btn-primary mt-3">Submit Assignment</a>
+  {% endif %}
+</div>
+{% endblock %}

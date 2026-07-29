@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Teacher Dashboard{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h1 class="mb-4 text-center">Teacher Dashboard</h1>
+  <div class="row g-4">
+    <!-- Cards -->
+    <div class="col-md-3">
+      <div class="glass p-4 text-center">
+        <h5>Total Students</h5>
+        <p class="display-5 fw-bold">{{ total_students }}</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="glass p-4 text-center">
+        <h5>Total Courses</h5>
+        <p class="display-5 fw-bold">{{ total_courses }}</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="glass p-4 text-center">
+        <h5>Total Assignments</h5>
+        <p class="display-5 fw-bold">{{ total_assignments }}</p>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="glass p-4 text-center">
+        <h5>Total Quizzes</h5>
+        <p class="display-5 fw-bold">{{ total_quizzes }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chart Section -->
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="glass p-4">
+        <h5 class="mb-3">Enrollments Over the Last 6 Months</h5>
+        <canvas id="enrollmentChart" height="120"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+  const ctx = document.getElementById('enrollmentChart').getContext('2d');
+  const data = {
+    labels: {{ chart_data.labels|safe }},
+    datasets: [{
+      label: 'Enrollments',
+      data: {{ chart_data.data|safe }},
+      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+      borderColor: 'rgba(255, 255, 255, 0.8)',
+      borderWidth: 2,
+      tension: 0.4,
+      pointRadius: 4,
+      pointBackgroundColor: '#ffdd57',
+    }]
+  };
+  new Chart(ctx, {
+    type: 'line',
+    data: data,
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.1)' } },
+        x: { grid: { color: 'rgba(255,255,255,0.1)' } }
+      },
+      plugins: {
+        legend: { labels: { color: '#fff' } },
+        tooltip: { backgroundColor: 'rgba(0,0,0,0.8)' }
+      }
+    }
+  });
+</script>
+{% endblock %}

@@ -3,8 +3,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Assignment
-from .forms import AssignmentForm, SubmissionForm
+from .models import Assignment, Submission
+from .forms import AssignmentForm, SubmissionForm, SubmissionReviewForm
 
 # Simple teacher check – customize as needed
 def is_teacher(user):
@@ -21,6 +21,22 @@ class AssignmentDetailView(DetailView):
     model = Assignment
     template_name = 'assignments/detail.html'
     context_object_name = 'assignment'
+
+@login_required
+@user_passes_test(is_teacher)
+def submission_review(request, pk):
+    """Teacher reviews a student's submission, assigns grade and feedback."""
+    submission = get_object_or_404(Submission, pk=pk)
+    if request.method == 'POST':
+        form = SubmissionReviewForm(request.POST)
+        if form.is_valid():
+            submission.grade = form.cleaned_data['grade']
+            submission.feedback = form.cleaned_data['feedback']
+            submission.save()
+            return redirect('assignments:detail', pk=submission.assignment.id)
+    else:
+        form = SubmissionReviewForm(instance=submission)
+    return render(request, 'assignments/review.html', {'form': form, 'submission': submission})
 
 @method_decorator([login_required, user_passes_test(is_teacher)], name='dispatch')
 class AssignmentCreateView(CreateView):

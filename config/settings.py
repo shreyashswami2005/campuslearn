@@ -12,7 +12,7 @@ SECRET_KEY = os.environ.get(
     'django-insecure-43ieyu27ifpa+xs%7vdjg91mo%&ilcvc(j*_swt#_u^=b7zq(!',
 )
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
@@ -40,9 +40,12 @@ INSTALLED_APPS = [
     'dashboard',
     'teacher',
     'assignments',
+    'videos.apps.VideosConfig',
     'quizzes',
-    'videos',
-    'materials',
+    'study_materials',
+    'marks',
+    'certificates',
+    'teacher_dashboard',
 
 ]
 
