@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Videos for {{ course.title }}{% endblock %}
+{% block title %}{% if course %}Videos for {{ course.title }}{% else %}All Videos{% endif %}{% endblock %}
 
 {% block content %}
 <div class="container py-4">
-  <h2 class="mb-4">{{ course.title }} – Video Lectures</h2>
+  <h2 class="mb-4">{% if course %}{{ course.title }} – Video Lectures{% else %}All Video Lectures{% endif %}</h2>
   <div class="row">
     {% for video in videos %}
     <div class="col-md-6 col-lg-4 mb-4">
@@ -13,7 +13,7 @@
         <div class="card-body d-flex flex-column">
           <h5 class="card-title">{{ video.title }}</h5>
           <p class="card-text text-truncate">{{ video.description|default:"No description" }}</p>
-          <a href="{% url 'videos:video_detail' course_slug=course.slug video_id=video.id %}" class="mt-auto btn btn-primary">Watch</a>
+          <a href="{% url 'videos:video_detail' course_slug=video.course.slug video_id=video.id %}" class="mt-auto btn btn-primary">Watch</a>
         </div>
       </div>
     </div>

@@ -4,6 +4,11 @@ from .models import Video, VideoProgress
 from courses.models import Course
 
 @login_required
+def all_videos(request):
+    videos = Video.objects.all()
+    return render(request, 'videos/video_list.html', {'course': None, 'videos': videos})
+
+@login_required
 def video_list(request, course_slug):
     course = get_object_or_404(Course, slug=course_slug)
     videos = course.videos.all()

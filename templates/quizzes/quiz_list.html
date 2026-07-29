@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if course %}Quizzes for {{ course.title }}{% else %}All Quizzes{% endif %}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-4">{% if course %}{{ course.title }} – Quizzes{% else %}All Quizzes{% endif %}</h2>
+  <div class="row">
+    {% for quiz in quizzes %}
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ quiz.title }}</h5>
+          <p class="card-text text-truncate">{{ quiz.description|default:"No description" }}</p>
+          <a href="{% url 'quizzes:quiz_detail' course_slug=quiz.course.slug quiz_id=quiz.id %}" class="mt-auto btn btn-primary">Start Quiz</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p>No quizzes available right now.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

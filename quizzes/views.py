@@ -5,6 +5,11 @@ from .models import Quiz, Question, Choice, StudentQuizAttempt, StudentAnswer
 from courses.models import Course
 
 @login_required
+def all_quizzes(request):
+    quizzes = Quiz.objects.filter(active=True)
+    return render(request, 'quizzes/quiz_list.html', {'course': None, 'quizzes': quizzes})
+
+@login_required
 def quiz_list(request, course_slug):
     course = get_object_or_404(Course, slug=course_slug)
     quizzes = course.quizzes.filter(active=True)
