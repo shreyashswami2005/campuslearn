@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ video.title }} – {{ course.title }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h2 class="mb-3">{{ video.title }}</h2>
+  <p class="text-muted mb-4">{{ video.description|default:"No description" }}</p>
+  <div class="ratio ratio-16x9 mb-4">
+    <video id="videoPlayer" class="w-100 h-100" controls preload="metadata" poster="{% if video.thumbnail %}{{ video.thumbnail.url }}{% endif %}">
+      <source src="{{ video.file.url }}" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+  <a href="{% url 'videos:video_list' course_slug=course.slug %}" class="btn btn-outline-secondary">← Back to videos</a>
+</div>
+
+<script>
+  const player = document.getElementById('videoPlayer');
+  // Seek to saved position when metadata is loaded
+  player.addEventListener('loadedmetadata', function() {
+    const savedPos = {{ progress.last_position|default:0 }};
+    if (savedPos > 0 && savedPos < player.duration) {
+      player.currentTime = savedPos;
+    }
+  });
+
+  // Periodically send progress (every 15 seconds)
+  let timer;
+  player.addEventListener('play', function() {
+    timer = setInterval(sendProgress, 15000);
+  });
+  player.addEventListener('pause', function() {
+    clearInterval(timer);
+    sendProgress();
+  });
+  player.addEventListener('ended', function() {
+    clearInterval(timer);
+    sendProgress();
+  });
+  window.addEventListener('beforeunload', function() {
+    clearInterval(timer);
+    sendProgress();
+  });
+
+  function sendProgress() {
+    fetch('', {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: `last_position=${Math.floor(player.currentTime)}`,
+    }).catch(() => {});
+  }
+</script>
+{% endblock %}
