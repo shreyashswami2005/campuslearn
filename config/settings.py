@@ -13,14 +13,17 @@ SECRET_KEY = os.environ.get(
     'django-insecure-43ieyu27ifpa+xs%7vdjg91mo%&ilcvc(j*_swt#_u^=b7zq(!',
 )
 
-DEBUG = os.environ.get('DEBUG', 'True').lower() in ('1', 'true', 'yes')
+DEBUG = False
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     'testserver',
     '.vercel.app',
+    'campuslearn-nine.vercel.app',
 ]
+
+
 
 extra_hosts = os.environ.get('ALLOWED_HOSTS', '')
 if extra_hosts:
