@@ -6,7 +6,7 @@ from courses.models import Course
 @login_required
 def student_dashboard(request):
     student = request.user
-    courses = Course.objects.filter(enrolled_students=student)
+    courses = Course.objects.filter(enrollments__student=student)
     attendance = []
     progress = []
     marks = []
