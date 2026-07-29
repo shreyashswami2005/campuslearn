@@ -95,15 +95,16 @@ if os.environ.get('DATABASE_URL'):
     }
 else:
     db_path = BASE_DIR / 'db.sqlite3'
-    if os.environ.get('VERCEL'):
+    # On Vercel / serverless (read-only filesystem), copy SQLite DB to /tmp
+    if any(os.environ.get(k) for k in ('VERCEL', 'VERCEL_URL', 'VERCEL_ENV', 'AWS_LAMBDA_FUNCTION_NAME')):
         import shutil
         tmp_db = Path('/tmp/db.sqlite3')
-        if not tmp_db.exists() and db_path.exists():
+        if db_path.exists():
             try:
                 shutil.copy2(db_path, tmp_db)
             except Exception:
                 pass
-        db_path = tmp_db if tmp_db.exists() else db_path
+        db_path = tmp_db
 
     DATABASES = {
         'default': {
