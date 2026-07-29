@@ -1,4 +1,5 @@
-"""
+# Production settings
+
 Django settings for College Learning Platform (local + Vercel).
 """
 
