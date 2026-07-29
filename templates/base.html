@@ -17,6 +17,7 @@
       <a class="brand" href="{% url 'courses:home' %}">CampusLearn</a>
       <div class="nav-links">
         <a href="{% url 'courses:list' %}">Courses</a>
+        <a href="{% url 'materials:list' %}">Materials</a>
         {% if user.is_authenticated %}
   <a href="{% url 'accounts:dashboard' %}">Dashboard</a>
   <a href="{% url 'dashboard:student_dashboard' %}">Student Dashboard</a>
