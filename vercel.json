@@ -1,11 +1,12 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-  "functions": {
-    "config/wsgi.py": {
-      "maxDuration": 60
-    }
-  },
+  "routes": [
+    { "src": "/(.*)", "dest": "/api/wsgi.py" }
+  ],
+  "builds": [
+    { "src": "api/wsgi.py", "use": "@vercel/python" }
+  ],
   "env": {
-    "DJANGO_SETTINGS_MODULE": "config.settings"
+    "DJANGO_SETTINGS_MODULE": "config.settings",
+    "PYTHONUNBUFFERED": "1"
   }
 }

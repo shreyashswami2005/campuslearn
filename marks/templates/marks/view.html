@@ -1,34 +1,36 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% load static %}
-{% block title %}My Marks{% endblock %}
+
+{% block title %}My Internal Marks{% endblock %}
+
 {% block content %}
-<div class="container py-5 glass">
-  <h2 class="mb-4">My Internal Marks</h2>
-  {% if marks %}
-    <table class="table table-hover table-dark">
-      <thead>
-        <tr>
-          <th>Course</th>
-          <th>Component</th>
-          <th>Score</th>
-          <th>Max Score</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for mark in marks %}
-        <tr>
-          <td>{{ mark.course.title }}</td>
-          <td>{{ mark.component.name }}</td>
-          <td>{{ mark.score }}</td>
-          <td>{{ mark.max_score }}</td>
-          <td>{{ mark.date_recorded|date:"M d, Y" }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
+<div class="container" style="max-width: 900px; margin: auto; padding: 2rem; background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); color: #f0f0f0;">
+    <h2 class="heading" style="margin-bottom: 1.5rem;">My Internal Marks</h2>
+    {% if marks %}
+    <table class="table table-hover" style="background: rgba(255,255,255,0.12); border-radius: 8px;">
+        <thead>
+            <tr style="color:#ffdd57;">
+                <th>Course</th>
+                <th>Component</th>
+                <th>Score</th>
+                <th>Max Score</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mark in marks %}
+            <tr>
+                <td>{{ mark.course.title }}</td>
+                <td>{{ mark.component.name }}</td>
+                <td>{{ mark.score }}</td>
+                <td>{{ mark.max_score }}</td>
+                <td>{{ mark.date_recorded|date:"M d, Y" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
-  {% else %}
+    {% else %}
     <p>No marks recorded yet.</p>
-  {% endif %}
+    {% endif %}
 </div>
 {% endblock %}
