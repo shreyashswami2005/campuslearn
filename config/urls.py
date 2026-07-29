@@ -14,6 +14,7 @@ urlpatterns = [
     path('courses/', include('courses.urls')),
     path('quizzes/', include('quizzes.urls')),
     path('videos/', include('videos.urls')),
+    path('materials/', include('materials.urls')),
     # Media files in development
     path('media/<path:path>', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
 ]

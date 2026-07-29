@@ -1,8 +1,6 @@
 # Production settings
 
-Django settings for College Learning Platform (local + Vercel).
-"""
-
+"""Django settings for College Learning Platform (local + Vercel)."""
 import os
 import urllib.parse
 from pathlib import Path
