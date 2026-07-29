@@ -3,4 +3,4 @@ psycopg[binary]>=3.1,<4
 python-dotenv>=1.0,<2
 weasyprint>=69.0
 qrcode[pil]>=8.2
-vercel_wsgi>=0.2.0
+vercel-wsgi>=0.2.0

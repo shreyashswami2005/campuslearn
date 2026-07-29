@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'videos.apps.VideosConfig',
     'quizzes',
     'study_materials',
+    'materials',
     'marks',
     'certificates',
     'teacher_dashboard',
