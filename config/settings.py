@@ -127,7 +127,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+if any(os.environ.get(k) for k in ('VERCEL', 'VERCEL_URL', 'VERCEL_ENV', 'AWS_LAMBDA_FUNCTION_NAME')):
+    MEDIA_ROOT = Path('/tmp/media')
+else:
+    MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # Session & Authentication Settings

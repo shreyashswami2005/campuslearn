@@ -20,14 +20,14 @@ class Certificate(models.Model):
         return f"Certificate #{self.pk} – {self.student.username} – {self.course.title}"
 
     def save(self, *args, **kwargs):
-        # Generate QR code on first save if not present
-        if not self.qr_code:
-            verification_url = f"https://example.com/certificates/verify/{self.pk}/"
+        is_new = self.pk is None
+        super().save(*args, **kwargs)
+        if is_new and not self.qr_code:
+            verification_url = f"https://collegelms.vercel.app/certificates/verify/{self.pk}/"
             qr = qrcode.QRCode(version=1, box_size=10, border=4)
             qr.add_data(verification_url)
             qr.make(fit=True)
             img = qr.make_image(fill='black', back_color='white')
             buffer = BytesIO()
             img.save(buffer, format='PNG')
-            self.qr_code.save(f'cert_{self.pk}.png', ContentFile(buffer.getvalue()), save=False)
-        super().save(*args, **kwargs)
+            self.qr_code.save(f'cert_{self.pk}.png', ContentFile(buffer.getvalue()), save=True)
