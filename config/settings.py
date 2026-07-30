@@ -93,10 +93,21 @@ if os.environ.get('DATABASE_URL'):
         )
     }
 else:
+    db_path = BASE_DIR / 'db.sqlite3'
+    if any(os.environ.get(k) for k in ('VERCEL', 'VERCEL_URL', 'VERCEL_ENV', 'AWS_LAMBDA_FUNCTION_NAME')):
+        import shutil
+        tmp_db = Path('/tmp/db.sqlite3')
+        if db_path.exists() and not tmp_db.exists():
+            try:
+                shutil.copy2(db_path, tmp_db)
+            except Exception:
+                pass
+        db_path = tmp_db
+
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+            'NAME': db_path,
         }
     }
 
