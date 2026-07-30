@@ -133,6 +133,22 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
+# Session & Authentication Settings
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_NAME = 'sessionid'
+SESSION_COOKIE_AGE = 1209600  # 14 days (in seconds)
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_SAVE_EVERY_REQUEST = True  # Saves session & updates cookie expiration on every request
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SECURE = not DEBUG  # False for HTTP local development, True for HTTPS production
+SESSION_COOKIE_SAMESITE = 'Lax'
+SESSION_COOKIE_DOMAIN = None
+
+# CSRF Cookie Settings
+CSRF_COOKIE_SECURE = not DEBUG  # False for HTTP local development, True for HTTPS production
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = 'Lax'
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = 'accounts:login'
@@ -142,6 +158,8 @@ LOGOUT_REDIRECT_URL = 'courses:home'
 CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'http://localhost:8000',
+    'http://127.0.0.1',
+    'http://localhost',
 ]
 for env_key in ('VERCEL_URL', 'VERCEL_PROJECT_PRODUCTION_URL'):
     host = os.environ.get(env_key)
@@ -155,8 +173,9 @@ if extra_csrf:
 
 CSRF_FAILURE_VIEW = 'accounts.views.csrf_failure'
 
-# Vercel terminates HTTPS at the edge
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# Enable SECURE_PROXY_SSL_HEADER only in production (when DEBUG is False)
+if not DEBUG:
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 from django.contrib.messages import constants as message_constants
 
