@@ -17,6 +17,30 @@ def main():
     django.setup()
     print('Running migrate...')
     call_command('migrate', interactive=False, verbosity=1)
+    
+    # Auto-create / update production superuser
+    try:
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        admin_user, created = User.objects.get_or_create(
+            username='admin',
+            defaults={
+                'email': 'admin@college.com',
+                'is_staff': True,
+                'is_superuser': True,
+                'is_active': True,
+            }
+        )
+        if created or not admin_user.check_password('admin123'):
+            admin_user.set_password('admin123')
+            admin_user.is_staff = True
+            admin_user.is_superuser = True
+            admin_user.is_active = True
+            admin_user.save()
+            print('Production superuser "admin" created/updated.')
+    except Exception as e:
+        print(f'Warning: Could not create superuser: {e}')
+
     print('Build migrations complete.')
 
 

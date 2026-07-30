@@ -80,37 +80,23 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Postgres on Vercel (DATABASE_URL); SQLite locally
+import dj_database_url
+
+# Postgres in production (DATABASE_URL); SQLite for local development
 if os.environ.get('DATABASE_URL'):
-    url = urllib.parse.urlparse(os.environ['DATABASE_URL'])
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': urllib.parse.unquote(url.path.lstrip('/')),
-            'USER': urllib.parse.unquote(url.username or ''),
-            'PASSWORD': urllib.parse.unquote(url.password or ''),
-            'HOST': url.hostname,
-            'PORT': url.port or 5432,
-            'OPTIONS': {'sslmode': 'require'},
-        }
+        'default': dj_database_url.config(
+            default=os.environ['DATABASE_URL'],
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True,
+        )
     }
 else:
-    db_path = BASE_DIR / 'db.sqlite3'
-    # On Vercel / serverless (read-only filesystem), copy SQLite DB to /tmp
-    if any(os.environ.get(k) for k in ('VERCEL', 'VERCEL_URL', 'VERCEL_ENV', 'AWS_LAMBDA_FUNCTION_NAME')):
-        import shutil
-        tmp_db = Path('/tmp/db.sqlite3')
-        if db_path.exists():
-            try:
-                shutil.copy2(db_path, tmp_db)
-            except Exception:
-                pass
-        db_path = tmp_db
-
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': db_path,
+            'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
 
